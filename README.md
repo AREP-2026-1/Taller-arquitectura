@@ -17,32 +17,29 @@ MicroFramework is a minimalist web framework that converts a basic HTTP server i
 
 ```mermaid
 classDiagram
-    direction LR
+    direction TB
 
-    App ..> MicroFramework : uses
-    MicroFramework *-- HttpServer : owns
-    HttpServer o-- RequestHandler : routes
-    HttpServer ..> Request : creates
-    HttpServer ..> Response : creates
-    RequestHandler ..> Request : reads
-    RequestHandler ..> Response : writes
+    App ..> MicroFramework
+    MicroFramework *-- HttpServer
+    HttpServer o-- RequestHandler
+    RequestHandler ..> Request
+    RequestHandler ..> Response
 
     class App {
-        +main()$ void
+        +main()$
     }
 
     class MicroFramework {
-        +get(path, handler)$ void
-        +staticfiles(path)$ void
-        +start()$ void
+        +get(path, handler)$
+        +staticfiles(path)$
+        +start()$
     }
 
     class HttpServer {
-        -getRoutes Map
-        -staticFilesPath String
-        +addGetRoute() void
-        +start() void
-        +stop() void
+        -routes
+        -staticFilesPath
+        +start()
+        +stop()
     }
 
     class RequestHandler {
@@ -51,19 +48,17 @@ classDiagram
     }
 
     class Request {
-        -method String
-        -path String
-        -queryParams Map
-        +getValues(name) String
-        +getMethod() String
-        +getPath() String
+        -method
+        -path
+        -queryParams
+        +getValues(name)
     }
 
     class Response {
-        -statusCode int
-        -contentType String
-        +setStatusCode() void
-        +setContentType() void
+        -statusCode
+        -contentType
+        +setStatusCode()
+        +setContentType()
     }
 ```
 
