@@ -1,0 +1,44 @@
+classDiagram
+    direction TB
+
+    App ..> MicroFramework
+    MicroFramework *-- HttpServer
+    HttpServer o-- RequestHandler
+    RequestHandler ..> Request
+    RequestHandler ..> Response
+
+    class App {
+        +main()$
+    }
+
+    class MicroFramework {
+        +get(path, handler)$
+        +staticfiles(path)$
+        +start()$
+    }
+
+    class HttpServer {
+        -routes
+        -staticFilesPath
+        +start()
+        +stop()
+    }
+
+    class RequestHandler {
+        <<interface>>
+        +handle(req, res) String
+    }
+
+    class Request {
+        -method
+        -path
+        -queryParams
+        +getValues(name)
+    }
+
+    class Response {
+        -statusCode
+        -contentType
+        +setStatusCode()
+        +setContentType()
+    }
