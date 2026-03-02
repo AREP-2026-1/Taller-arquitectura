@@ -66,36 +66,39 @@ classDiagram
 
 ```mermaid
 flowchart TB
-    Client([Client / Browser])
+    Client(["Client / Browser"])
 
-    subgraph MicroFramework["MicroFramework Server"]
+    Client -->|HTTP Request| API
+
+    subgraph Server ["MicroFramework Server"]
         direction TB
-        API["MicroFramework API\nget() | staticfiles() | start()"]
+        API["MicroFramework API
+        get() | staticfiles() | start()"]
+        API --> TP
 
-        subgraph HttpServer["HttpServer Engine"]
-            direction LR
-            TP["Thread Pool\n(10 threads)"]
-            Router["Route Table\n(ConcurrentHashMap)"]
-            StaticResolver["Static File\nResolver"]
+        subgraph Engine ["HttpServer Engine"]
+            direction TB
+            TP["Thread Pool (10 threads)"]
+            TP --> Router
+            Router["Route Table (ConcurrentHashMap)"]
         end
 
-        API --> HttpServer
+        Router -->|Match found| Handler
+        Router -->|No match| StaticResolver["Static File Resolver"]
     end
 
-    subgraph Models["Request/Response Model"]
+    subgraph Model ["Request / Response Model"]
         direction LR
-        Req["Request\n- method, path\n- queryParams\n- headers"]
-        Res["Response\n- statusCode\n- contentType\n- headers"]
-        Handler["RequestHandler\n(Lambda Interface)"]
+        Handler["RequestHandler
+        (Lambda Interface)"]
+        Handler --- Req["Request
+        method, path, queryParams"]
+        Handler --- Res["Response
+        statusCode, contentType"]
     end
 
-    Client -->|"HTTP GET /hello?name=Pedro"| TP
-    TP --> Router
-    Router -->|"Match found"| Handler
-    Router -->|"No match"| StaticResolver
-    Handler --> Req
-    Handler --> Res
-    StaticResolver -->|"/webroot/..."| Static[("Static Files\n(HTML, CSS, JS, Images)")]
+    StaticResolver --> Static[("Static Files
+    HTML, CSS, JS, Images")]
 ```
 
 ### Key Components
