@@ -204,59 +204,51 @@ microframework/
 
 ## AWS Deployment
 
-The application was deployed on an **Amazon EC2** instance (Amazon Linux 2023, `t4g.small`, `us-east-1`).
+The application was deployed on an **Amazon EC2** instance (Amazon Linux 2023, `t4g.micro`, `us-east-1`).
 
-### Steps
+### EC2 Instance Configuration
 
-**1. Upload source files via SCP and install dependencies**
+**AMI — Amazon Linux 2023:**
 
-```bash
-scp -i microspringboot.pem -r microframework/ ec2-user@<IP>:~/microframework
-ssh -i microspringboot.pem ec2-user@<IP> "sudo dnf install -y java-17-amazon-corretto maven"
-```
+![AMI Selection](docs/aws-ec2-ami.png)
 
-![Archivos subidos y dependencias instaladas](docs/screenshots/01-archivos-subidos.png)
+**Instance type and key pair:**
 
-**2. Build with Maven**
+![Instance type and key pair](docs/aws-ec2-instance.png)
 
-```bash
-ssh -i microspringboot.pem ec2-user@<IP> "cd ~/microframework && mvn package -DskipTests"
-```
+**Network settings:**
 
-![Maven BUILD SUCCESS](docs/screenshots/02-maven-build-success.png)
+![Network settings](docs/aws-ec2-network.png)
 
-**3. Start the server (IoC auto-scan mode)**
+**Security group — ports 22 (SSH) and 8080 open:**
 
-```bash
-ssh -i microspringboot.pem ec2-user@<IP> \
-  "cd ~/microframework && nohup java -cp target/classes org.microframework.ioc.MicroSpringBoot &"
-```
+![Security group](docs/aws-ec2-security.png)
 
-![Servidor iniciado — @RestController descubiertos](docs/screenshots/03-server-running.png)
+---
 
-**4. Verify endpoints**
+### Deployment Steps
+
+**1. Connect via SSH, verify Java & Maven, build the project**
 
 ```bash
-curl http://<IP>:8080/greeting?name=AREP   # Hola AREP
-curl http://<IP>:8080/counter              # Request count: 1
+scp -i microspringboot.pem -r microframework/ ec2-user@18.207.200.203:~/
+ssh -i microspringboot.pem ec2-user@18.207.200.203
+cd microframework && mvn package -DskipTests
 ```
 
-![Respuestas de endpoints en AWS](docs/screenshots/04-endpoints-response.png)
+![SSH connection and Maven build](docs/aws-ssh-build.png)
 
-**5. Static file serving**
+**2. Start the server — IoC auto-scan discovers all `@RestController` beans — verify endpoints**
 
 ```bash
-curl -I http://<IP>:8080/index.html        # HTTP/1.1 200 OK
+java -cp target/classes org.microframework.ioc.MicroSpringBoot
+
+curl http://18.207.200.203:8080/
+curl http://18.207.200.203:8080/greeting?name=AREP
+curl -I http://18.207.200.203:8080/index.html
 ```
 
-![Archivos estáticos servidos correctamente](docs/screenshots/05-static-files.png)
-
-### Security Group
-
-| Type | Protocol | Port | Source |
-|------|----------|------|--------|
-| SSH | TCP | 22 | 0.0.0.0/0 |
-| Custom TCP | TCP | 8080 | 0.0.0.0/0 |
+![Server running and endpoint responses](docs/aws-endpoints.png)
 
 ## Built With
 
