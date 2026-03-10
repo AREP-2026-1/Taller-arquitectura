@@ -43,6 +43,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.1.2</version>
             </plugin>
+            <!-- Default JAR uses MicroSpringBoot (IoC / annotation-based entry point) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -50,9 +51,22 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org.microframework.App</mainClass>
+                            <mainClass>org.microframework.ioc.MicroSpringBoot</mainClass>
                         </manifest>
                     </archive>
+                </configuration>
+            </plugin>
+            <!--
+                Run DSL-style app:   mvn exec:java -Dexec.mainClass=org.microframework.App
+                Run IoC auto-scan:   mvn exec:java
+                Run IoC single bean: mvn exec:java -Dexec.args="org.microframework.controller.HelloController"
+            -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <mainClass>org.microframework.ioc.MicroSpringBoot</mainClass>
                 </configuration>
             </plugin>
         </plugins>
