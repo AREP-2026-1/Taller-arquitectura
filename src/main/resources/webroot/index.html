@@ -1,31 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MicroFramework Demo</title>
+    <title>MicroSpringBoot — AREP Taller 05</title>
     <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>MicroFramework</h1>
-        <p>A lightweight Java web framework for REST services and static file management.</p>
+        <h1>MicroSpringBoot Framework</h1>
+        <p>Servidor web IoC con reflexión en Java — AREP Taller 05. Descubre automáticamente
+           componentes <code>@RestController</code> en el classpath y publica sus métodos
+           <code>@GetMapping</code> como endpoints HTTP.</p>
 
         <div class="demo-section">
-            <h2>REST API Demo</h2>
+            <h2>API DSL — MicroFramework</h2>
 
             <div class="api-test">
                 <h3>GET /hello</h3>
-                <label for="nameInput">Enter your name:</label>
+                <label for="nameInput">Nombre:</label>
                 <input type="text" id="nameInput" placeholder="Pedro">
-                <button onclick="testHello()">Say Hello</button>
+                <button onclick="testHello()">Saludar</button>
                 <div id="helloResult" class="result"></div>
             </div>
 
             <div class="api-test">
                 <h3>GET /pi</h3>
-                <button onclick="testPi()">Get Pi Value</button>
+                <button onclick="testPi()">Obtener π</button>
                 <div id="piResult" class="result"></div>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2>API IoC — MicroSpringBoot (@RestController)</h2>
+
+            <div class="api-test">
+                <h3>GET /greeting?name=&lt;nombre&gt;</h3>
+                <label for="greetingInput">Nombre:</label>
+                <input type="text" id="greetingInput" placeholder="World">
+                <button onclick="testGreeting()">Greeting</button>
+                <div id="greetingResult" class="result"></div>
+            </div>
+
+            <div class="api-test">
+                <h3>GET /counter</h3>
+                <button onclick="testCounter()">Incrementar contador</button>
+                <div id="counterResult" class="result"></div>
             </div>
         </div>
     </div>
